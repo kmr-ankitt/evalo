@@ -22,9 +22,9 @@ export const saveExecution = mutation({
       .filter((q) => q.eq(q.field('userId'), identity.subject))
       .first()
 
-    if (!user?.isPro && args.language !== "javascript") {
-      throw new ConvexError("You need to be a pro user to use this language")
-    }
+    // if (!user?.isPro && args.language !== "javascript") {
+    //   throw new ConvexError("You need to be a pro user to use this language")
+    // }
 
     await ctx.db.insert("codeExecutions", {
       ...args,
