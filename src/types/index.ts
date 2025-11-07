@@ -38,6 +38,7 @@ export interface ExecutionResult {
 }
 
 export interface CodeEditorState {
+  compilationTime?: number;
   language: string;
   output: string;
   isRunning: boolean;
