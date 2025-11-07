@@ -18,9 +18,43 @@ export const syncUser = mutation({
         userId: args.userId,
         email: args.email,
         name: args.name,
-        isPro: false,
+        isTeacher: false,
       });
     }
+  },
+});
+
+export const makeUserTeacher = mutation({
+  args: {
+    userId: v.string(),
+    department: v.string(),
+    institutionName: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // get the user by userId
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_user_id")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .first();
+
+    if (!user) {
+      return { success: false };
+    }
+
+    // update isTeacher to true
+    await ctx.db.patch(user._id, {
+      isTeacher: true,
+    });
+
+    // update department if provided
+    await ctx.db.insert("teachers", {
+      userId: user._id,
+      department: args.department,
+      institutionName: args.institutionName,
+    });
+
+    return { success: true };
   },
 });
 
@@ -57,8 +91,6 @@ export const upgradeToPro = mutation({
     if (!user) throw new Error("User not found");
 
     await ctx.db.patch(user._id, {
-      isPro: true,
-      proSince: Date.now(),
       lemonSqueezyCustomerId: args.lemonSqueezyCustomerId,
       lemonSqueezyOrderId: args.lemonSqueezyOrderId,
     });
