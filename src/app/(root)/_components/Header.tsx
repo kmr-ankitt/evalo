@@ -21,7 +21,7 @@ export default function Header() {
   async function fetchConvexUser() {
     try {
       const convexQuery = await convex.query(api.users.getUser, {
-        userId: user?.id!,
+        userId: user?.id,
       });
 
       setConvexUser(convexQuery);
@@ -96,10 +96,10 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
             <ThemeSelector />
-            <LanguageSelector hasAccess={Boolean(convexUser?.isPro)} />
+            <LanguageSelector hasAccess={Boolean(!convexUser?.isPro)} />
           </div>
 
-          {!convexUser?.isPro && (
+          {convexUser?.isPro && (
             <Link
               href="/pricing"
               className="flex items-center gap-2 px-4 py-1.5 rounded-lg border border-amber-500/20 hover:border-amber-500/40 bg-gradient-to-r from-amber-500/10 
