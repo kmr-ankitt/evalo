@@ -1,24 +1,42 @@
+"use client";
+
 import { currentUser } from "@clerk/nextjs/server";
 import { ConvexHttpClient } from "convex/browser";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { api } from "../../../../convex/_generated/api";
 import Link from "next/link";
 import { Blocks, Code2, Sparkles } from "lucide-react";
-import { SignedIn } from "@clerk/nextjs";
+import { SignedIn, useUser } from "@clerk/nextjs";
 import LanguageSelector from "./LanguageSelector";
 import ThemeSelector from "./ThemeSelector";
 import RunButton from "./RunButton";
 import HeaderProfileBtn from "./HeaderProfileBtn";
 
-export default async function Header() {
+export default function Header() {
   const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-  const user = await currentUser();
+  // const user = await currentUser();
+  const [convexUser, setConvexUser] = useState<any | null>(null);
+  const { user } = useUser();
 
-  const convexUser = await convex.query(api.users.getUser, {
-    userId: user?.id || "",
-  });
+  async function fetchConvexUser() {
+    try {
+      const convexQuery = await convex.query(api.users.getUser, {
+        userId: user?.id!,
+      });
 
-  console.log({ convexUser });
+      setConvexUser(convexQuery);
+      console.log({ convexQuery });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    // on getting user it will create the convex user
+    if (user?.id!) {
+      fetchConvexUser();
+    }
+  }, [user]);
 
   return (
     <div className="relative z-10">
@@ -45,7 +63,7 @@ export default async function Header() {
 
             <div className="flex flex-col">
               <span className="block text-lg font-semibold bg-gradient-to-r from-blue-400 via-blue-300 to-purple-400 text-transparent bg-clip-text">
-                DevIDE
+                DevIDE{" "}
               </span>
               <span className="block text-xs text-blue-400/60 font-medium">
                 Interactive Code Editor
