@@ -82,6 +82,9 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
 
       set({ isRunning: true, error: null, output: "" });
 
+      let startTime = Date.now();
+      let endTime = 0;
+
       try {
         const runtime = LANGUAGE_CONFIG[language].pistonRuntime;
         const response = await fetch(`https://emkc.org/api/v2/piston/execute`, {
@@ -130,9 +133,13 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
           return;
         }
 
+        endTime = Date.now();
+        console.log(`Code executed in ${endTime - startTime} ms`);
+
         //get here, execution was successful
         const output = data.run.output;
         set({
+          compilationTime: endTime - startTime,
           output: output.trim(),
           error: null,
           executionResult: {
