@@ -4,31 +4,21 @@ import { mutation } from "./_generated/server";
 
 export const newAssignments = mutation({
   args: {
-    teacherId: v.string(),
+    teacherId: v.id("teachers"),
     title: v.string(),
     description: v.string(),
     solution: v.string(),
     language: v.string(),
     createdAt: v.number(),
-    compileTime: v.optional(v.number()),
-    testCases: v.array(
-      v.object({
-        input: v.string(),
-        output: v.string(),
-      })
-    ),
+    testCase: v.string(),
     dueDate: v.number(),
   },
   handler: async (ctx, args) => {
     // before creating the assignment check if the teacher exists
-    const teacher = await ctx.db
-      .query("teachers")
-      .filter((q) => q.eq("userId", args.teacherId))
-      .first();
-
+    const teacher = await ctx.db.get(args.teacherId);
     if (!teacher) {
       console.log("Teacher not found");
-      return { success: false };
+      return { success: false, error: "Teacher not found" };
     }
 
     let startTime = Date.now();
@@ -45,59 +35,63 @@ export const newAssignments = mutation({
           language: runtime.language,
           version: runtime.version,
           files: [{ content: args.solution }],
+          args: args.testCase.split('\n').map(testCase => testCase.trim()),
         }),
       });
 
       const data = await response.json();
       console.log("Data back from piston", data);
 
-      // Handle api level errors
-      if (data.message) {
-        // set({
-        //   error: data.message,
-        //   executionResult: { code, output: "", error: data.message },
-        // });
-        return;
-      }
+      // // Handle api level errors
+      // if (data.message) {
+      //   // set({
+      //   //   error: data.message,
+      //   //   executionResult: { code, output: "", error: data.message },
+      //   // });
+      //   return;
+      // }
 
-      // handle compilation errors
-      if (data.comile && data.compile.code !== 0) {
-        const error = data.compile.stderr || data.compile.output;
-        // set({
-        //   error,
-        //   executionResult: { code, output: "", error },
-        // });
+      // // handle compilation errors
+      // if (data.comile && data.compile.code !== 0) {
+      //   const error = data.compile.stderr || data.compile.output;
+      //   // set({
+      //   //   error,
+      //   //   executionResult: { code, output: "", error },
+      //   // });
 
-        return;
-      }
+      //   return;
+      // }
 
-      // handle runtime errors
-      if (data.run && data.run.code !== 0) {
-        const error = data.run.stderr || data.run.output;
-        // set({
-        //   error,
-        //   executionResult: { code, output: "", error },
-        // });
+      // // handle runtime errors
+      // if (data.run && data.run.code !== 0) {
+      //   const error = data.run.stderr || data.run.output;
+      //   // set({
+      //   //   error,
+      //   //   executionResult: { code, output: "", error },
+      //   // });
 
-        return;
-      }
+      //   return;
+      // }
 
       endTime = Date.now();
       console.log(`Code executed in ${endTime - startTime} ms`);
 
       const assignmentId = await ctx.db.insert("assignments", {
-        teacherId: teacher._id,
+        teacherId: args.teacherId,
         title: args.title,
         description: args.description,
         solution: args.solution,
         language: args.language,
-        createdAt: Date.now(),
-        compileTime: args.compileTime,
-        testCases: args.testCases,
+        createdAt: args.createdAt,
+        testCase: args.testCase,
         dueDate: args.dueDate,
+        compileTime: endTime - startTime,
+
+        expectedOutput: "", // Placeholder, can be set later
       });
 
-      return { assignmentId, success: true };
+      return { success: true, assignmentId };
+      // return { assignmentId, success: true };
     } catch (error) {
       console.error("Error creating assignment:", error);
       return { success: false };
