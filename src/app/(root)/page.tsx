@@ -1,71 +1,53 @@
-import EditorPanel from "./_components/EditorPanel";
-import Header from "./_components/Header";
-import OutputPanel from "./_components/OutputPanel";
-import QuestionsSection from "./_components/QuestionPanel";
+"use client"
+import React from 'react'
+import Header from '../(root)/_components/Header'
+import { div } from 'framer-motion/m'
+import { BookOpen } from 'lucide-react'
+import { AnimatePresence, motion } from "framer-motion";
+import LoginAsStudent from '@/components/LoginAsStudent'
+import LoginAsInstructor from '@/components/LoginAsInstructor'
 
-export default function Home() {
-  
-  // TODO: Remove this two
-    type QuestionsSectionProps = {
-      title?: string;
-      description?: string;
-      difficulty?: 'Easy' | 'Medium' | 'Hard';
-      className?: string;
-      expectedOutput?: string;
-    };
-  
-    const dummyData: QuestionsSectionProps = {
-      title: "Two Sum",
-      description: `Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
 
-  You may assume that each input would have exactly one solution, and you may not use the same element twice.
-
-  You can return the answer in any order.
-
-  Example 1:
-
-  Input: nums = [2,7,11,15], target = 9
-  Output: [0,1]
-  Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
-
-  Example 2:
-
-  Input: nums = [3,2,4], target = 6
-  Output: [1,2]
-
-  Example 3:
-
-  Input: nums = [3,3], target = 6
-  Output: [0,1]`,
-      difficulty: "Easy",
-      expectedOutput: "0 1\n1 2\n0 1",
-    };
-
+const page = () => {
   return (
-    <div className="min-h-screen">
-      <div className="max-w-[1800px] mx-auto p-4">
-        <Header />
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
-          <QuestionsSection 
-            title={dummyData.title}
-            description={dummyData.description}
-            difficulty={dummyData.difficulty}
-            testCase={`3
-            4
-            2 7 11 15
-            9
-            3
-            3 2 4
-            6
-            2
-            3 3
-            6`}
-            expectedOutput={dummyData.expectedOutput}
-            />
-          <EditorPanel />
-          <OutputPanel />
-        </div>
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center max-w-3xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r
+             from-blue-500/10 to-purple-500/10 text-sm text-gray-400 mb-6"
+          >
+            <BookOpen className="w-4 h-4" />
+            Community Code Library
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-100 to-gray-300 text-transparent bg-clip-text mb-6"
+          >
+           “Introducing the Smart Grader"
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-lg text-gray-400 mb-8"
+          >
+            “Your Virtual TA: Automating Grading, Amplifying Learning!”
+
+          </motion.p>
+
+          
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <LoginAsStudent />
+            <LoginAsInstructor />
+          </div>
+
       </div>
     </div>
-  );
+  )
 }
+
+export default page
