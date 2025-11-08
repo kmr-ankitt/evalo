@@ -35,7 +35,14 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     error: null,
     editor: null,
     executionResult: null,
+    executionTime: 0,
+    testcases: "",
 
+    setTestCases: (testcases: string) => {
+      const trimmedTestcases = testcases.trim();
+      set({testcases: trimmedTestcases})
+    },
+    
     getCode: () => get().editor?.getValue() || "",
     setEditor: (editor: Monaco) => {
       const savedCode =
@@ -72,9 +79,11 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     },
 
     runCode: async () => {
-      const { language, getCode } = get();
+      const { language, getCode, testcases} = get();
       const code = getCode();
-
+      const testcaseArray = testcases.split('\n').map(testcase => testcase.trim());
+      console.log("testcase: ", testcaseArray)
+      
       if (!code) {
         set({ error: "Please enter some code" });
         return;
@@ -96,6 +105,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
             language: runtime.language,
             version: runtime.version,
             files: [{ content: code }],
+            args: testcaseArray, 
           }),
         });
 
