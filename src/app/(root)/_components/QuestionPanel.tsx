@@ -22,7 +22,7 @@ export default function QuestionsSection({
   expectedOutput,
 }: QuestionsSectionProps) {
   const [isCopied, setIsCopied] = useState(false);
-  const { setTestCases } = useCodeEditorStore();
+  const { setTestCases, setExpectedOutput } = useCodeEditorStore();
   const difficultyColor =
     difficulty === "Easy"
       ? "bg-green-500"
@@ -32,6 +32,7 @@ export default function QuestionsSection({
 
   useEffect(() => {
     setTestCases(testCase || "");
+    setExpectedOutput(expectedOutput || "");
   }, [testCase]);
 
   const copyText = async (text: string) => {

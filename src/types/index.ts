@@ -40,7 +40,7 @@ export interface ExecutionResult {
 export interface CodeEditorState {
   compilationTime?: number;
   language: string;
-  output: string;
+  expectedOutput: string;
   isRunning: boolean;
   error: string | null;
   theme: string;
@@ -49,7 +49,9 @@ export interface CodeEditorState {
   executionResult: ExecutionResult | null;
   executionTime: number;
   testcases: string;
+  output: string;
   
+  setExpectedOutput: (expectedOutput: string) => void;
   setTestCases: (testcases: string) => void;
   setEditor: (editor: Monaco) => void;
   getCode: () => string;

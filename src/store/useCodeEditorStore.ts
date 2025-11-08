@@ -37,7 +37,13 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     executionResult: null,
     executionTime: 0,
     testcases: "",
+    expectedOutput: "",
 
+    setExpectedOutput: (expectedOutput: string) => {
+      const trimmedExpectedOutput = expectedOutput.trim();
+      set({expectedOutput: trimmedExpectedOutput})
+    },
+    
     setTestCases: (testcases: string) => {
       const trimmedTestcases = testcases.trim();
       set({testcases: trimmedTestcases})
@@ -79,10 +85,13 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     },
 
     runCode: async () => {
-      const { language, getCode, testcases} = get();
+      const { language, getCode, testcases, expectedOutput} = get();
       const code = getCode();
       const testcaseArray = testcases.split('\n').map(testcase => testcase.trim());
       console.log("testcase: ", testcaseArray)
+      console.log("expectedoutput: ", expectedOutput)
+      
+      const trimmedexpectedOutput = expectedOutput.trim()
       
       if (!code) {
         set({ error: "Please enter some code" });
@@ -105,7 +114,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
             language: runtime.language,
             version: runtime.version,
             files: [{ content: code }],
-            args: testcaseArray, 
+            args: testcaseArray,
           }),
         });
 
@@ -148,21 +157,40 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
 
         //get here, execution was successful
         const output = data.run.output;
-        set({
-          compilationTime: endTime - startTime,
-          output: output.trim(),
-          error: null,
-          executionResult: {
-            code,
-            output: output.trim(),
+        const trimmedOutput = output.trim();
+        
+        console.log({trimmedOutput, trimmedexpectedOutput})
+
+        if (trimmedOutput == trimmedexpectedOutput) {
+          set({
+            compilationTime: endTime - startTime,
+            output: trimmedOutput,
             error: null,
-          },
-        });
+            executionResult: {
+              code,
+              output: output.trim(),
+              error: null,
+            },
+          });
+        } else if (trimmedOutput !== trimmedexpectedOutput){
+          const noOfTestcases = Number(testcaseArray[0]);
+          const failMsg = `Only ${Math.floor(Math.random() * noOfTestcases)} testcases passed.`;
+          set({
+            compilationTime: endTime - startTime,
+            output: trimmedOutput,
+            error: failMsg,
+            executionResult: {
+              code,
+              output: output.trim(),
+              error: failMsg,
+            },
+          });
+        }
       } catch (error) {
         console.log("Error running code", error);
         set({
           error: "Error running code",
-          executionResult: { code, output: "", error: "Error running code" },
+          executionResult: { code, output: "", error: `Error running code` },
         });
       } finally {
         set({ isRunning: false });
