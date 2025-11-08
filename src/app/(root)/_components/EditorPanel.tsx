@@ -11,6 +11,8 @@ import useMounted from "@/hooks/useMounted";
 import { useClerk } from "@clerk/nextjs";
 import { EditorPanelSkeleton } from "./EditorPanelSkeleton";
 import ShareSnippetDialog from "./ShareSnippetDialog";
+import QuestionsSection from "./QuestionPanel";
+import RunButton from "./RunButton";
 
 export default function EditorPanel() {
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
@@ -75,6 +77,7 @@ export default function EditorPanel() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <RunButton />
             {/* Font Size Slider */}
             <div className="flex items-center gap-3 px-3 py-2 bg-[#1e1e2e] rounded-lg ring-1 ring-white/5">
               <TypeIcon className="size-4 text-gray-400" />
