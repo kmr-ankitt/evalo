@@ -8,6 +8,7 @@ import { api } from "../../../convex/_generated/api"
 import NavigationHeader from "../snippets/_components/NavigationHeader"
 import ProfileHeader from "./_components/ProfileHeader"
 import ProfileHeaderSkeleton from "./_components/ProfileHeaderSkeleton"
+import ListOfQuestion from "./_components/ListOfQuestion"
 import { AnimatePresence, motion } from "framer-motion"
 import { ChevronRight, Clock, Code, ListVideo, Loader2, Star } from "lucide-react"
 import Image from "next/image"
@@ -66,10 +67,19 @@ export default function ProfilePage() {
           {/* Profile Header */}
 
           {userStats && userData && (
-            <ProfileHeader userStats={userStats} userData={userData} user={user!} />
+            <ProfileHeader
+              userStats={userStats}
+              userData={{ ...(userData as any), isPro: (userData as any).isPro ?? false }}
+              user={user!}
+            />
           )}
 
           {(userStats === undefined || !isLoaded) && <ProfileHeaderSkeleton />}
+
+          {/* Module questions list (from convex/moduleData) */}
+          <div className="mt-6 mb-20">
+            <ListOfQuestion />
+          </div>
 
           {/* Main content */}
           <div
