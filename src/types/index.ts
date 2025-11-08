@@ -50,7 +50,9 @@ export interface CodeEditorState {
   executionTime: number;
   testcases: string;
   output: string;
+  grade: number;
   
+  setGrade: (grade: number) => void;
   setExpectedOutput: (expectedOutput: string) => void;
   setTestCases: (testcases: string) => void;
   setEditor: (editor: Monaco) => void;

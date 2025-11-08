@@ -38,7 +38,12 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     executionTime: 0,
     testcases: "",
     expectedOutput: "",
+    grade: 0,
 
+    setGrade: (grade: number) => {
+      set({grade})
+    },
+    
     setExpectedOutput: (expectedOutput: string) => {
       const trimmedExpectedOutput = expectedOutput.trim();
       set({expectedOutput: trimmedExpectedOutput})
@@ -85,7 +90,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
     },
 
     runCode: async () => {
-      const { language, getCode, testcases, expectedOutput} = get();
+      const { language, getCode, testcases, expectedOutput, compilationTime} = get();
       const code = getCode();
       const testcaseArray = testcases.split('\n').map(testcase => testcase.trim());
       console.log("testcase: ", testcaseArray)
@@ -158,12 +163,17 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
         //get here, execution was successful
         const output = data.run.output;
         const trimmedOutput = output.trim();
+        const grade =
+          compilationTime! < 1000 ? 4.5 :
+          compilationTime! < 2000 ? 4 :
+          compilationTime! < 3000 ? 3 : 2;
         
         console.log({trimmedOutput, trimmedexpectedOutput})
 
         if (trimmedOutput == trimmedexpectedOutput) {
           set({
             compilationTime: endTime - startTime,
+            grade,
             output: trimmedOutput,
             error: null,
             executionResult: {
@@ -177,6 +187,7 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
           const failMsg = `Only ${Math.floor(Math.random() * noOfTestcases)} testcases passed.`;
           set({
             compilationTime: endTime - startTime,
+            grade: 1,
             output: trimmedOutput,
             error: failMsg,
             executionResult: {

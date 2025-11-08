@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import RunningCodeSkeleton from "./RunningCodeSkeleton";
 
 export default function OutputPanel() {
-  const { output, error, isRunning, compilationTime} = useCodeEditorStore();
+  const { output, error, isRunning, compilationTime, grade} = useCodeEditorStore();
   const [isCopied, setIsCopied] = useState(false);
 
   const hasContent = error || output;
@@ -78,7 +78,10 @@ export default function OutputPanel() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-emerald-400 mb-3">
                 <CheckCircle className="w-5 h-5" />
-                    <span className="font-medium">Execution Successful in {compilationTime} ms</span>
+                <span className="font-medium">Execution Successful in {compilationTime} ms</span>
+              </div>
+              <div className="flex items-center gap-2 text-emerald-400 mb-3">
+                <span className="font-medium">Grade: {grade}</span>
               </div>
               <pre className="whitespace-pre-wrap text-gray-300">{output}</pre>
             </div>
