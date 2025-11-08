@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Devide",
+  title: "Evalo",
   description: "Share and run code in the cloud",
 };
 

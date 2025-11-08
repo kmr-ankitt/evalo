@@ -1,14 +1,6 @@
-# DevIDE
+# Evalo
 
-DevIDE is a web IDE with multi-language support.
-
-## Tech stack
-
-- Next.js
-- Convex
-- Framer Motion
-- Clerk
-- LemonSqueezy
+Evalo is a web IDE with multi-language support.
 
 ## Highlights
 
@@ -29,8 +21,8 @@ DevIDE is a web IDE with multi-language support.
 - Clone this repo
 
 ```bash
-git clone https://www.github.com/kmr-ankitt/devide
-cd devide
+git clone https://www.github.com/kmr-ankitt/evalo
+cd evalo
 ```
 
 - Setup .env file
