@@ -28,12 +28,8 @@ export default defineSchema({
     language: v.string(),
     createdAt: v.number(),
     compileTime: v.optional(v.number()),
-    testCases: v.array(
-      v.object({
-        input: v.string(),
-        output: v.string(),
-      })
-    ),
+    testCases: v.string(),
+    expectedOutput: v.string(),
     dueDate: v.number(),
   }).index("by_teacher_id", ["teacherId"]),
 

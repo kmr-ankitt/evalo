@@ -8,9 +8,11 @@
  * @module
  */
 
+import type * as assignments from "../assignments.js";
 import type * as codeExecutions from "../codeExecutions.js";
 import type * as http from "../http.js";
 import type * as lemonSqueezy from "../lemonSqueezy.js";
+import type * as moduleData from "../moduleData.js";
 import type * as snippets from "../snippets.js";
 import type * as users from "../users.js";
 
@@ -29,9 +31,11 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  assignments: typeof assignments;
   codeExecutions: typeof codeExecutions;
   http: typeof http;
   lemonSqueezy: typeof lemonSqueezy;
+  moduleData: typeof moduleData;
   snippets: typeof snippets;
   users: typeof users;
 }>;
