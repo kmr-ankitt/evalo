@@ -14,6 +14,7 @@ import type * as http from "../http.js";
 import type * as lemonSqueezy from "../lemonSqueezy.js";
 import type * as moduleData from "../moduleData.js";
 import type * as snippets from "../snippets.js";
+import type * as submissions from "../submissions.js";
 import type * as teacher from "../teacher.js";
 import type * as users from "../users.js";
 
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   lemonSqueezy: typeof lemonSqueezy;
   moduleData: typeof moduleData;
   snippets: typeof snippets;
+  submissions: typeof submissions;
   teacher: typeof teacher;
   users: typeof users;
 }>;
