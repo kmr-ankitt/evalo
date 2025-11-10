@@ -21,6 +21,9 @@ importers:
       '@monaco-editor/react':
         specifier: ^4.6.0
         version: 4.7.0(monaco-editor@0.54.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      acorn:
+        specifier: ^8.15.0
+        version: 8.15.0
       convex:
         specifier: ^1.18.2
         version: 1.28.2(@clerk/clerk-react@5.53.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
